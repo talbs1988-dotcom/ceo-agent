@@ -121,7 +121,7 @@ description: סוכן מנכ״ל — תמונת מצב של כל הסוכנים 
 5. **רק אחרי שהמשתמש אישר שההודעה הגיעה:** משנים ל-`"enabled": true`, ומדליקים: `node "{{ROOT}}/alerts/schedule.mjs" on`.
    הפקודה מחכה עד שהבדיקה רצה פעם אחת באמת, ומדווחת מה יצא. אומרים למשתמש שההתראות עובדות רק אם היא כתבה "דלוקה ורצה".
 
-לכבות: `node "{{ROOT}}/alerts/schedule.mjs" off`, ו-`"enabled": false` בהגדרות.
+לכבות רק את ההודעות: `"enabled": false` בהגדרות. הבדיקה ברקע ממשיכה לעדכן את הדשבורד. לכבות הכול (גם את העדכון ברקע): `node "{{ROOT}}/alerts/schedule.mjs" off`.
 לבדוק מצב: `node "{{ROOT}}/alerts/schedule.mjs" status`, והלוג ב-`{{ROOT}}/data/check.log`.
 
 ## "תחבר את Make"

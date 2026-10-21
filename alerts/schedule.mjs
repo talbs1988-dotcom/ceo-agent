@@ -53,7 +53,7 @@ function describe(loaded) {
   if (!loaded) return "כבויה";
   let h = {};
   try { h = JSON.parse(fs.readFileSync(HEALTH, "utf8")); } catch {}
-  if (h.disabled) return "המשימה דלוקה, אבל ההתראות כבויות בהגדרות";
+  if (h.disabled) return "דלוקה ורצה: מעדכנת את הדשבורד כל רבע שעה (ההתראות בוואטסאפ כבויות)";
   const age = Date.now() - (Date.parse(h.lastRunAt) || 0);
   if (age > 45 * 60 * 1000) return "דלוקה, אבל לא רצה ב-45 הדקות האחרונות";
   if (h.lastError) return `דלוקה ורצה, אבל יש בעיה: ${h.lastError}`;
@@ -77,7 +77,9 @@ function report(ok) {
     console.log(
       h.lastError
         ? `הבדיקה הקבועה רצה, אבל יש בעיה: ${h.lastError}`
-        : "הבדיקה הקבועה דלוקה ורצה. מעכשיו היא בודקת כל רבע שעה.",
+        : h.disabled
+          ? "הבדיקה הקבועה דלוקה ורצה. מעכשיו הדשבורד מתעדכן לבד כל רבע שעה."
+          : "הבדיקה הקבועה דלוקה ורצה. מעכשיו היא בודקת כל רבע שעה, ושולחת הודעה בוואטסאפ כשמשהו נתקע.",
     );
     process.exit(h.lastError ? 2 : 0);
   }

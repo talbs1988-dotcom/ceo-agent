@@ -837,8 +837,8 @@ function scanLaunchd(skillIndex, writes) {
       // הבדיקה הקבועה של סוכן מנכ״ל עצמו: לפי הדוח שהיא כותבת אחרי כל ריצה.
       const h = readJSON(path.join(DATA, "alert-health.json"), null);
       const last = h && Date.parse(h.lastRunAt);
-      if (h && h.disabled) { status = "off"; why = "ההתראות כבויות בהגדרות"; }
-      else if (!h || !last) { status = "unknown"; why = "עוד לא רצה אף פעם"; }
+      if (!h || !last) { status = "unknown"; why = "עוד לא רצה אף פעם"; }
+      else if (h.disabled && last >= NOW - 45 * MIN) { status = "ok"; why = "מעדכנת את הדשבורד כל רבע שעה (ההתראות בוואטסאפ כבויות)"; lastRunEvidence = last; }
       else if (h.lastError) { status = "failed"; why = `רצה, אבל ההתראה האחרונה לא נשלחה: ${clean(h.lastError, 100)}`; lastRunEvidence = last; }
       else if (last < NOW - 45 * MIN) { status = "missed"; why = `לא רצה מאז ${heWhen(last)}`; lastRunEvidence = last; }
       else { status = "ok"; why = "רצה בזמן, וההתראות האחרונות נשלחו"; lastRunEvidence = last; }
