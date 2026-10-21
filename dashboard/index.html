@@ -1875,7 +1875,7 @@ a.chipx:hover { border-color: rgba(169,128,63,.5); }
               : wa && wa.enabled && !ahFresh
                 ? `<b>❔ התראות: לא ידוע אם עובדות</b><p>${ah && ah.lastRunAt ? `הבדיקה הקבועה רצה ${esc(ago(ah.lastRunAt))}.` : "הבדיקה הקבועה עוד לא רצה."}</p>`
                 : wa && wa.enabled
-                  ? `<b>${img("whatsapp")} התראות בוואטסאפ פעילות</b><p>${wa.daily ? `סיכום יומי ב-${esc(wa.dailyAt || "20:00")}, ותקלה מיד כשהיא קורית.` : "רק כשמשהו נתקע או לא רץ בזמן."}</p>`
+                  ? `<b>${img("whatsapp")} התראות בוואטסאפ פעילות</b><p>${wa.instant === false ? `רק סיכום יומי, ב-${esc(wa.dailyAt || "20:00")}.` : wa.daily ? `סיכום יומי ב-${esc(wa.dailyAt || "20:00")}, ותקלה מיד כשהיא קורית.` : "רק כשמשהו נתקע או לא רץ בזמן."}</p>`
                   : `<b>${img("whatsapp")} התראות בוואטסאפ כבויות</b><p>כדי לקבל הודעה כשמשהו נתקע.</p><a class="mini" style="align-self:flex-start" href="${claude("סוכן מנכ״ל, תפעיל התראות בוואטסאפ")}">להפעלה</a>`;
         }
 
