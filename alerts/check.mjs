@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // סוכן מנכ״ל — הבדיקה הקבועה.
-// רצה לבד כל רבע שעה: סורקת, ואם סוכן נכשל או לא רץ בזמן שולחת הודעה בוואטסאפ.
+// רצה לבד כל רבע שעה: סורקת ומעדכנת את הדשבורד. אם ההתראות דלוקות ומשהו נכשל או לא רץ בזמן, שולחת הודעה בוואטסאפ.
 // על אותה תקלה שולחים פעם אחת. כשהיא נפתרת שולחים "חזר לעבוד".
 // אם בעל העסק ביקש, נשלח גם סיכום יומי בשעה שבחר.
 //
@@ -114,12 +114,6 @@ if (TEST) {
   process.exit(ok ? 0 : 1);
 }
 
-if (!alerts.enabled) {
-  console.log(`[${stamp()}] ההתראות כבויות בהגדרות, לא שולחים.`);
-  writeHealth({ lastRunAt: new Date().toISOString(), disabled: true, lastError: null });
-  process.exit(0);
-}
-
 // ---------- סריקה ----------
 try {
   execFileSync(
@@ -136,6 +130,13 @@ try {
 }
 const data = readJSON(path.join(DATA, "agents.json"), null);
 if (!data) process.exit(1);
+
+// הבדיקה ברקע מעדכנת את הדשבורד אצל כולם. התראות בוואטסאפ נשלחות רק למי שהדליק אותן.
+if (!alerts.enabled) {
+  console.log(`[${stamp()}] הדשבורד עודכן. ההתראות כבויות, לא שולחים.`);
+  writeHealth({ lastRunAt: new Date().toISOString(), disabled: true, lastError: null });
+  process.exit(0);
+}
 
 // ---------- מה השתנה ----------
 // מפתח יציב לתקלה: הסטטוס + הסיבה בלי מספרים ושעות. כך אותה תקלה לא נשלחת שוב בכל בדיקה
