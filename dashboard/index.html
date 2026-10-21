@@ -1,0 +1,2269 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>סוכן מנכ״ל · טל בשור</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* אותה שפה כמו המסך של העוזר האישי */
+      :root {
+        --bg: #f6f2ea;
+        --surface: #fff;
+        --navy: #050d1c;
+        --navy2: #0b1b33;
+        --navy3: #153054;
+        --gold: #a9803f;
+        --gold2: #c9a459;
+        --gold3: #dfc389;
+        --goldl: #f6ecd3;
+        --ink: #0a1424;
+        --mut: #5a6472;
+        --line: rgba(10, 20, 36, 0.09);
+        --soft: #faf8f3;
+        --sh:
+          0 1px 2px rgba(5, 13, 28, 0.05),
+          0 4px 10px -4px rgba(5, 13, 28, 0.08),
+          0 22px 44px -22px rgba(5, 13, 28, 0.38);
+        --ok-bg: #e6f3ec;
+        --ok: #1f7a50;
+        --bad-bg: #fbe8e5;
+        --bad: #b0281d;
+        --late-bg: #fbf0df;
+        --late: #8e5210;
+        --off-bg: #efeee9;
+        --off: #5e606a;
+        --unk-bg: #ecf0f6;
+        --unk: #3c4d6b;
+        --man-bg: #f3efe6;
+        --man: #6b5426;
+        --idle-bg: #eef3ee;
+        --idle: #4a6650;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        font-family: "Rubik", system-ui, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+        font-size: 14.5px;
+        line-height: 1.55;
+        min-height: 100vh;
+      }
+      button,
+      input {
+        font: inherit;
+        color: inherit;
+      }
+      a {
+        color: inherit;
+      }
+      :focus-visible {
+        outline: 2px solid var(--gold);
+        outline-offset: 2px;
+        border-radius: 6px;
+      }
+      .sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+      }
+      .logo-i {
+        width: 1.15em;
+        height: 1.15em;
+        object-fit: contain;
+        vertical-align: -0.18em;
+        flex-shrink: 0;
+      }
+
+      .glow {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(88px);
+      }
+      .o1 {
+        width: 44vw;
+        height: 44vw;
+        min-width: 330px;
+        min-height: 330px;
+        background: #08214d;
+        opacity: 0.32;
+        top: -15vw;
+        inset-inline-start: -9vw;
+      }
+      .o2 {
+        width: 38vw;
+        height: 38vw;
+        min-width: 290px;
+        min-height: 290px;
+        background: #d9a94d;
+        opacity: 0.24;
+        top: -6vh;
+        inset-inline-end: -10vw;
+      }
+      .o3 {
+        width: 40vw;
+        height: 40vw;
+        min-width: 300px;
+        min-height: 300px;
+        background: #05122c;
+        opacity: 0.18;
+        bottom: -20vw;
+        inset-inline-start: 34vw;
+      }
+      .gl {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(8, 33, 77, 0.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(8, 33, 77, 0.08) 1px, transparent 1px);
+        background-size: 58px 58px;
+        -webkit-mask-image: radial-gradient(
+          ellipse 82% 62% at 50% 0%,
+          #000 12%,
+          transparent 74%
+        );
+        mask-image: radial-gradient(
+          ellipse 82% 62% at 50% 0%,
+          #000 12%,
+          transparent 74%
+        );
+      }
+      .wrap {
+        position: relative;
+        z-index: 1;
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 22px 20px 60px;
+        display: grid;
+        grid-template-columns: 290px minmax(0, 1fr);
+        gap: 22px;
+        align-items: start;
+      }
+      .mainc {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow: var(--sh);
+      }
+
+      /* סרגל צד */
+      .side {
+        position: sticky;
+        top: 16px;
+        padding: 18px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .s-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 4px 8px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .s-logo {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: linear-gradient(160deg, var(--navy), var(--navy3));
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .s-brand b {
+        display: block;
+        font-weight: 800;
+        font-size: 18px;
+        color: var(--navy2);
+        line-height: 1.2;
+      }
+      .s-brand small {
+        color: var(--mut);
+        font-size: 13px;
+      }
+      .s-t {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--gold);
+        padding: 4px 10px 0;
+      }
+      .snav {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .snav button {
+        all: unset;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 12px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 15.5px;
+        color: var(--ink);
+      }
+      .snav button:hover {
+        background: var(--soft);
+      }
+      .snav button[aria-pressed="true"] {
+        background: linear-gradient(160deg, var(--navy2), var(--navy3));
+        color: #fff;
+      }
+      .snav .e {
+        width: 24px;
+        text-align: center;
+        font-size: 17px;
+      }
+      .snav .cnt {
+        margin-inline-start: auto;
+        font-size: 13px;
+        font-weight: 700;
+        background: var(--soft);
+        color: var(--mut);
+        border-radius: 20px;
+        padding: 1px 9px;
+      }
+      .snav button[aria-pressed="true"] .cnt {
+        background: rgba(223, 195, 137, 0.22);
+        color: var(--gold3);
+      }
+      .snav .cnt.hot {
+        background: var(--bad-bg);
+        color: var(--bad);
+      }
+      .snav .sub {
+        padding-inline-start: 26px;
+        font-size: 14.5px;
+        font-weight: 500;
+      }
+      .s-alert {
+        border-top: 1px solid var(--line);
+        padding: 14px 6px 0;
+        font-size: 13.5px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .s-alert b {
+        font-weight: 700;
+      }
+      .s-alert p {
+        margin: 0;
+        color: var(--mut);
+        font-size: 13px;
+      }
+
+      header {
+        text-align: center;
+        padding: 6px 0 2px;
+      }
+      .plaque {
+        display: inline-block;
+        background: linear-gradient(160deg, #02060d, var(--navy2));
+        border-radius: 14px;
+        padding: 10px 20px 8px;
+        margin-bottom: 12px;
+        box-shadow: 0 14px 32px -16px rgba(2, 6, 13, 0.8);
+      }
+      .plaque img {
+        width: min(150px, 40vw);
+        height: auto;
+        display: block;
+      }
+      .eyebrow {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        color: var(--gold);
+      }
+      h1 {
+        font-size: clamp(30px, 5vw, 44px);
+        font-weight: 800;
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+        margin: 6px 0 8px;
+      }
+      h1 .g {
+        background: linear-gradient(90deg, #a9803f, #d9b46a 50%, #a9803f);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .lead {
+        color: var(--mut);
+        font-size: 15px;
+        margin: 0 auto;
+        max-width: 680px;
+      }
+      .acts {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        height: 40px;
+        padding: 0 16px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: #fff;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 600;
+        color: var(--ink);
+        box-shadow: 0 1px 2px rgba(5, 13, 28, 0.05);
+      }
+      .btn:hover {
+        border-color: rgba(169, 128, 63, 0.45);
+      }
+      .btn.danger {
+        color: var(--late);
+      }
+      .btn.danger:hover {
+        border-color: var(--late);
+      }
+      .btn.dark {
+        background: linear-gradient(160deg, var(--navy), var(--navy3));
+        border-color: transparent;
+        color: #fff;
+      }
+      .banner {
+        border-radius: 14px;
+        padding: 10px 14px;
+        background: var(--late-bg);
+        color: var(--late);
+        font-size: 14px;
+        text-align: center;
+      }
+      .banner a {
+        color: inherit;
+        font-weight: 700;
+      }
+
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .kpi {
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        cursor: pointer;
+      }
+      .kpi:hover {
+        border-color: rgba(169, 128, 63, 0.45);
+      }
+      .kpi .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .kpi .lbl {
+        color: var(--mut);
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .kpi .ic {
+        font-size: 18px;
+      }
+      .kpi .val {
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1.15;
+        color: var(--navy2);
+      }
+      .kpi .sub {
+        font-size: 12.5px;
+        color: var(--mut);
+      }
+      .kpi .sub .warn {
+        color: var(--bad);
+        font-weight: 600;
+      }
+      .kpi .sub .good {
+        color: var(--ok);
+        font-weight: 600;
+      }
+      .cover {
+        text-align: center;
+        font-size: 12.5px;
+        color: var(--mut);
+        margin-top: -6px;
+      }
+      .cover b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .cover a {
+        color: var(--gold);
+        font-weight: 600;
+      }
+
+      /* העץ */
+      .org {
+        padding: 22px 16px 20px;
+      }
+      .org .lvl {
+        display: flex;
+        justify-content: center;
+      }
+      .node {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 9px 16px;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 15px;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+      .node.you {
+        border: 1.5px solid rgba(169, 128, 63, 0.6);
+        color: var(--navy2);
+        padding: 14px 30px;
+        min-width: min(280px, 80vw);
+        justify-content: center;
+        font-size: 22px;
+        font-weight: 800;
+        gap: 12px;
+        border-radius: 18px;
+        box-shadow: 0 10px 26px -10px rgba(5, 13, 28, 0.35);
+      }
+      .node.you small,
+      .node.boss small {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 1px;
+      }
+      .node.you small {
+        color: var(--gold);
+      }
+      .node .e {
+        font-size: 28px;
+      }
+      .node.boss {
+        background: linear-gradient(160deg, var(--navy), var(--navy3));
+        color: #fff;
+        border: 0;
+        padding: 12px 22px;
+        font-size: 16.5px;
+        box-shadow:
+          0 14px 30px -12px rgba(5, 13, 28, 0.75),
+          0 0 0 1px rgba(223, 195, 137, 0.35);
+      }
+      .node.boss small {
+        color: var(--gold3);
+        font-weight: 500;
+        font-size: 12px;
+      }
+      .vline {
+        width: 2px;
+        height: 22px;
+        margin: 0 auto;
+        background: linear-gradient(var(--gold3), var(--gold));
+      }
+      .hline {
+        height: 2px;
+        margin: 0 14%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold3) 15%,
+          var(--gold) 50%,
+          var(--gold3) 85%,
+          transparent
+        );
+      }
+      .depts {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .dept {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      .drop {
+        width: 2px;
+        height: 18px;
+        background: var(--gold3);
+      }
+      .dpill {
+        background: linear-gradient(160deg, var(--navy2), var(--navy3));
+        color: #fff;
+        border-radius: 100px;
+        padding: 6px 15px;
+        font-size: 14px;
+        font-weight: 700;
+        display: inline-flex;
+        gap: 7px;
+        align-items: center;
+        cursor: pointer;
+        border: 0;
+      }
+      .dpill .n {
+        background: rgba(223, 195, 137, 0.22);
+        color: var(--gold3);
+        border-radius: 100px;
+        padding: 0 7px;
+        font-size: 12px;
+      }
+      .dtip {
+        font-size: 12.5px;
+        color: var(--mut);
+        margin-top: -4px;
+        text-align: center;
+      }
+      .roles {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        width: 100%;
+      }
+      .role {
+        all: unset;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 8px 11px;
+        box-shadow: 0 1px 2px rgba(5, 13, 28, 0.05);
+        box-sizing: border-box;
+        width: 100%;
+      }
+      .role:hover {
+        border-color: rgba(169, 128, 63, 0.5);
+        box-shadow: 0 6px 14px -8px rgba(21, 48, 84, 0.35);
+      }
+      .role .d {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .role .tx {
+        min-width: 0;
+        flex: 1;
+      }
+      .role .t {
+        display: block;
+        font-weight: 700;
+        font-size: 13.5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .role .w {
+        display: block;
+        font-size: 11.5px;
+        color: var(--mut);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .role .new {
+        font-size: 11px;
+        color: var(--gold);
+        font-weight: 700;
+      }
+      .role.more {
+        justify-content: center;
+        color: var(--mut);
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      /* רשימה + מנכ״ל */
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 300px);
+        gap: 16px;
+        align-items: start;
+      }
+      .ceo {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        position: sticky;
+        top: 14px;
+      }
+      .ceo-h b {
+        font-weight: 700;
+        font-size: 16px;
+        display: block;
+      }
+      .ceo-h small {
+        color: var(--mut);
+        font-size: 12.5px;
+      }
+      .stage {
+        border-radius: 16px;
+        background: var(--soft);
+        border: 1px solid var(--line);
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 4px;
+      }
+      .stage .face {
+        font-size: 38px;
+        line-height: 1;
+      }
+      .stage h2 {
+        margin: 4px 0 0;
+        font-weight: 800;
+        font-size: 19px;
+        color: var(--navy2);
+      }
+      .stage p {
+        margin: 0;
+        color: var(--mut);
+        font-size: 13.5px;
+      }
+      .todo {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+        margin-top: 8px;
+        text-align: start;
+      }
+      .todo button,
+      .todo a {
+        all: unset;
+        color: var(--ink);
+        cursor: pointer;
+        display: flex;
+        gap: 9px;
+        align-items: flex-start;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+      .todo button:hover,
+      .todo a:hover {
+        border-color: rgba(169, 128, 63, 0.5);
+      }
+      .ask {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1.5px solid rgba(169, 128, 63, 0.4);
+        border-radius: 12px;
+        padding: 5px;
+        padding-inline-start: 12px;
+        background: #fff;
+      }
+      .ask:focus-within {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 4px rgba(169, 128, 63, 0.14);
+      }
+      .ask input {
+        flex: 1;
+        border: 0;
+        outline: 0;
+        min-width: 0;
+        height: 30px;
+        background: none;
+      }
+      .ask button {
+        width: 34px;
+        height: 34px;
+        border: 0;
+        border-radius: 9px;
+        background: var(--navy2);
+        color: #fff;
+        cursor: pointer;
+      }
+      .qchips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .qchips button {
+        all: unset;
+        cursor: pointer;
+        font-size: 12px;
+        color: var(--mut);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 3px 10px;
+        background: #fff;
+      }
+
+      .list {
+        padding: 12px;
+        min-width: 0;
+      }
+      .list-top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 2px 4px 10px;
+      }
+      .list-top h2 {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--navy2);
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 0 10px;
+        height: 36px;
+        width: min(260px, 100%);
+        color: var(--mut);
+        background: #fff;
+      }
+      .search.top {
+        width: min(520px, 100%);
+        height: 46px;
+        margin: 14px auto 0;
+        border-radius: 14px;
+        font-size: 15px;
+        box-shadow: 0 1px 2px rgba(5, 13, 28, 0.05);
+      }
+      .search input {
+        border: 0;
+        outline: 0;
+        background: none;
+        flex: 1;
+        min-width: 0;
+        color: var(--ink);
+      }
+      .scroll {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 640px;
+        table-layout: fixed;
+      }
+      thead th {
+        font-weight: 600;
+        color: var(--mut);
+        font-size: 12px;
+        text-align: start;
+        padding: 9px 8px;
+        background: var(--soft);
+      }
+      thead th:first-child {
+        border-start-start-radius: 10px;
+        border-end-start-radius: 10px;
+      }
+      thead th:last-child {
+        border-start-end-radius: 10px;
+        border-end-end-radius: 10px;
+      }
+      tbody tr {
+        border-bottom: 1px solid var(--line);
+        cursor: pointer;
+      }
+      tbody tr:hover {
+        background: #fcfbf8;
+      }
+      td {
+        padding: 11px 8px;
+        vertical-align: middle;
+      }
+      .ag {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+      .ag .k {
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        background: var(--soft);
+        border: 1px solid var(--line);
+        font-size: 17px;
+      }
+      .ag .k .logo-i {
+        width: 20px;
+        height: 20px;
+      }
+      .ag > span:last-child {
+        min-width: 0;
+      }
+      .ag b {
+        font-weight: 600;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .ag small {
+        color: var(--mut);
+        font-size: 12px;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .desc {
+        color: var(--ink);
+        opacity: 0.85;
+        font-size: 13px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .desc.none {
+        color: var(--late);
+        opacity: 1;
+      }
+      .where {
+        display: inline-flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .wb {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 20px;
+        padding: 2px 9px;
+        background: var(--soft);
+        border: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      .wb.cloud {
+        background: #eef4fb;
+        color: #22467a;
+        border-color: transparent;
+      }
+      .wb.pc {
+        background: #f2f2ef;
+        color: #3f4658;
+        border-color: transparent;
+      }
+      .wb.man {
+        background: var(--man-bg);
+        color: var(--man);
+        border-color: transparent;
+      }
+      .when2 {
+        display: block;
+        font-size: 12px;
+        color: var(--mut);
+        margin-top: 3px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 20px;
+        padding: 2px 10px;
+        white-space: nowrap;
+      }
+      .s-ok {
+        background: var(--ok-bg);
+        color: var(--ok);
+      }
+      .s-failed {
+        background: var(--bad-bg);
+        color: var(--bad);
+      }
+      .s-missed {
+        background: var(--late-bg);
+        color: var(--late);
+      }
+      .s-off {
+        background: var(--off-bg);
+        color: var(--off);
+      }
+      .s-unknown {
+        background: var(--unk-bg);
+        color: var(--unk);
+      }
+      .s-manual {
+        background: var(--man-bg);
+        color: var(--man);
+      }
+      .s-partial { background: var(--late-bg); color: var(--late); }
+      .s-idle {
+        background: var(--idle-bg);
+        color: var(--idle);
+      }
+      .s-gone {
+        background: var(--late-bg);
+        color: var(--late);
+      }
+      .when {
+        display: block;
+        font-size: 11.5px;
+        color: var(--mut);
+        margin-top: 3px;
+        white-space: nowrap;
+      }
+      .mini {
+        all: unset;
+        cursor: pointer;
+        height: 30px;
+        padding: 0 10px;
+        border-radius: 9px;
+        border: 1px solid rgba(169, 128, 63, 0.35);
+        background: #fffaf1;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--gold);
+        text-decoration: none;
+        box-sizing: border-box;
+      }
+      .newb {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--gold);
+        background: var(--goldl);
+        border-radius: 20px;
+        padding: 0 7px;
+        margin-inline-start: 6px;
+      }
+      .empty {
+        padding: 34px 16px;
+        text-align: center;
+        color: var(--mut);
+      }
+      .empty b {
+        display: block;
+        font-weight: 700;
+        font-size: 17px;
+        color: var(--ink);
+        margin-bottom: 6px;
+      }
+
+      /* דף סוכן */
+      .veil {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 13, 28, 0.36);
+        display: none;
+        z-index: 20;
+      }
+      .veil.on {
+        display: block;
+      }
+      .page {
+        position: fixed;
+        top: 3vh;
+        left: 50%;
+        transform: translateX(-50%);
+        width: min(1080px, 94vw);
+        max-height: 94vh;
+        background: #fff;
+        border-radius: 22px;
+        z-index: 21;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 30px 80px rgba(5, 13, 28, 0.3);
+        overflow: hidden;
+      }
+      .page.on {
+        display: flex;
+      }
+      .p-h {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        background: linear-gradient(180deg, var(--soft), #fff);
+      }
+      .p-h .k {
+        width: 52px;
+        height: 52px;
+        border-radius: 15px;
+        background: #fff;
+        border: 1px solid var(--line);
+        display: grid;
+        place-items: center;
+        font-size: 25px;
+        flex-shrink: 0;
+      }
+      .p-h .k .logo-i {
+        width: 28px;
+        height: 28px;
+      }
+      .p-h h2 {
+        margin: 0;
+        font-weight: 800;
+        font-size: 21px;
+        line-height: 1.25;
+        word-break: break-word;
+        color: var(--navy2);
+      }
+      .p-h .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 6px;
+        align-items: center;
+      }
+      .badge {
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 20px;
+        padding: 2px 10px;
+        background: var(--soft);
+        color: var(--mut);
+        border: 1px solid var(--line);
+      }
+      .badge.ai {
+        background: var(--goldl);
+        color: var(--gold);
+        border-color: transparent;
+      }
+      .x {
+        margin-inline-start: auto;
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .p-b {
+        padding: 18px 22px 24px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .does {
+        font-size: 16px;
+        line-height: 1.7;
+        margin: 0;
+      }
+      .does.none {
+        color: var(--late);
+      }
+      .why {
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 13.5px;
+      }
+      .facts {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 8px;
+      }
+      .fact {
+        background: var(--soft);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 9px 11px;
+        min-width: 0;
+      }
+      .fact span {
+        display: block;
+        font-size: 11.5px;
+        color: var(--mut);
+      }
+      .fact b {
+        font-weight: 600;
+        font-size: 13px;
+        word-break: break-word;
+      }
+      .fact a {
+        text-decoration: none;
+      }
+      .sec h3 {
+        margin: 0 0 8px;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--navy2);
+      }
+      .flow {
+        position: relative;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 22px 18px;
+        background:
+          radial-gradient(circle, rgba(8, 33, 77, 0.13) 1px, transparent 1.2px)
+            0 0 / 18px 18px,
+          var(--soft);
+        overflow-x: auto;
+      }
+      .flow svg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: visible;
+      }
+      .f-chain {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 48px 56px;
+        align-items: flex-start;
+        position: relative;
+        z-index: 1;
+      }
+      .f-branch {
+        margin-top: 34px;
+        position: relative;
+        z-index: 1;
+      }
+      .f-branch h4 {
+        margin: 0 0 26px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--mut);
+      }
+      .f-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+      }
+      .fn {
+        width: 124px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .fn .box {
+        width: 68px;
+        height: 68px;
+        border-radius: 18px;
+        background: #fff;
+        border: 1px solid rgba(10, 20, 36, 0.12);
+        box-shadow: 0 4px 12px rgba(5, 13, 28, 0.06);
+        display: grid;
+        place-items: center;
+        font-size: 28px;
+      }
+      .fn .box .logo-i {
+        width: 32px;
+        height: 32px;
+      }
+      .f-chain > .fn:not(.k-main) .box {
+        margin-top: 7px;
+      }
+      .fn.k-trigger .box {
+        border-radius: 18px 34px 34px 18px;
+      }
+      .fn.k-main .box {
+        width: 82px;
+        height: 82px;
+        border: 2px solid var(--navy2);
+        font-size: 34px;
+        box-shadow: 0 0 0 4px rgba(223, 195, 137, 0.35);
+      }
+      .fn.k-sub .box,
+      .fn.k-skill .box,
+      .fn.k-service .box {
+        width: 52px;
+        height: 52px;
+        font-size: 22px;
+        border-radius: 14px;
+      }
+      .fn.k-sub .box .logo-i,
+      .fn.k-skill .box .logo-i,
+      .fn.k-service .box .logo-i {
+        width: 26px;
+        height: 26px;
+      }
+      .fn .t {
+        font-weight: 700;
+        font-size: 12.5px;
+        margin-top: 8px;
+        word-break: break-word;
+      }
+      .fn .s {
+        font-size: 11.5px;
+        color: var(--mut);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .links a {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 6px 10px;
+        font-size: 13px;
+        text-decoration: none;
+        background: #fff;
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .files {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .files a {
+        font-size: 12px;
+        color: var(--mut);
+        direction: ltr;
+        text-align: left;
+        word-break: break-all;
+        text-decoration: none;
+        border-bottom: 1px dashed var(--line);
+        padding-bottom: 3px;
+      }
+      .p-acts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .note {
+        font-size: 12px;
+        color: var(--mut);
+      }
+
+      @media (max-width: 1180px) {
+        .depts {
+          grid-template-columns: 1fr;
+        }
+        .hline {
+          display: none;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .ceo {
+          position: static;
+        }
+      }
+      @media (max-width: 980px) {
+        .wrap {
+          grid-template-columns: 1fr;
+        }
+        .side {
+          position: static;
+        }
+        .snav {
+          flex-direction: row;
+          overflow-x: auto;
+        }
+        .snav button {
+          white-space: nowrap;
+        }
+        .snav .sub {
+          padding-inline-start: 12px;
+        }
+        .s-t,
+        .s-alert {
+          display: none;
+        }
+        .kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 640px) {
+        .wrap {
+          padding: 14px 10px 40px;
+        }
+        .page {
+          top: 0;
+          left: 0;
+          transform: none;
+          width: 100%;
+          max-height: 100vh;
+          height: 100vh;
+          border-radius: 0;
+        }
+      }
+    
+.def { border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(180deg, #fffdf8, #fff); padding: 6px 16px; }
+.def-row { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: start; }
+.def-row:last-child { border-bottom: 0; }
+.dl { font-weight: 700; color: var(--navy2); font-size: 14px; padding-top: 2px; }
+.chipsx { display: flex; flex-wrap: wrap; gap: 7px; }
+.chipx { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 5px 10px; font-size: 13px; font-weight: 600; text-decoration: none; }
+a.chipx:hover { border-color: rgba(169,128,63,.5); }
+@media (max-width: 640px) { .def-row { grid-template-columns: 1fr; } }
+
+.toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--navy2); color: #fff; border-radius: 14px; padding: 12px 16px; font-size: 14px; box-shadow: 0 14px 34px rgba(5,13,28,.35); z-index: 40; display: none; gap: 12px; align-items: center; max-width: 92vw; }
+.toast.on { display: flex; }
+.toast a { color: var(--gold3); font-weight: 700; white-space: nowrap; }
+</style>
+  </head>
+  <body>
+    <div class="glow" aria-hidden="true">
+      <div class="orb o1"></div>
+      <div class="orb o2"></div>
+      <div class="orb o3"></div>
+      <div class="gl"></div>
+    </div>
+    <div class="wrap" id="app">
+      <aside class="side card" aria-label="תפריט">
+        <div class="s-brand">
+          <span class="s-logo" aria-hidden="true">🧭</span>
+          <div><b>סוכן מנכ״ל</b><small id="sideBiz">הסוכנים שלך</small></div>
+        </div>
+        <nav class="snav" id="snav"></nav>
+        <div class="s-alert" id="sideAlert"></div>
+      </aside>
+
+      <div class="mainc">
+        <header>
+          <div class="plaque"><img src="logo.png" alt="Tal Bsore" /></div>
+          <div class="eyebrow">טל בשור · עסק שעובד בשבילך</div>
+          <h1>הסוכנים <span class="g">שלך</span></h1>
+          <p class="lead" id="lead">
+            מי עובד בשבילך, מה רץ לבד, ומה צריך אותך עכשיו.
+          </p>
+          <div class="acts">
+            <a class="btn" id="rescan">🔄 סריקה מחדש</a>
+            <a class="btn" id="addMissing">➕ חסר משהו? להוסיף</a>
+            <a class="btn dark" id="newAgent">✨ לבנות סוכן חדש</a>
+          </div>
+          <label class="search top"
+            ><span aria-hidden="true">🔎</span><span class="sr">חיפוש</span
+            ><input id="q" type="search" placeholder="לחפש סוכן לפי שם, תפקיד או מערכת…"
+          /></label>
+        </header>
+
+        <section class="kpis" id="kpis" aria-label="תמונת מצב"></section>
+        <div class="cover" id="cover"></div>
+
+        <section class="card org" id="tree" aria-label="העץ">
+          <div class="lvl">
+            <div class="node you">
+              <span class="e" aria-hidden="true">👔</span
+              ><span>מנכ״ל<small id="youName">(בעל העסק)</small></span>
+            </div>
+          </div>
+          <div class="vline"></div>
+          <div class="lvl">
+            <div class="node boss">
+              <span aria-hidden="true">🧭</span
+              ><span>סוכן מנכ״ל<small>שומר על כל הצוות</small></span>
+            </div>
+          </div>
+          <div class="vline"></div>
+          <div class="hline"></div>
+          <div class="depts" id="depts"></div>
+        </section>
+
+        <div class="grid">
+          <section class="card list" aria-label="רשימה">
+            <div class="list-top">
+              <h2 id="listTitle"></h2>
+              <label class="search"
+                ><span aria-hidden="true">🔎</span><span class="sr">חיפוש ברשימה</span
+                ><input id="q2" type="search" placeholder="לחפש סוכן…"
+              /></label>
+
+            </div>
+            <div class="scroll">
+              <table>
+                <colgroup>
+                  <col style="width: 28%" />
+                  <col style="width: 32%" />
+                  <col style="width: 20%" />
+                  <col style="width: 20%" />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>מי</th>
+                    <th>מה התפקיד שלו</th>
+                    <th>איפה ומתי</th>
+                    <th id="thStatus">מצב</th>
+                  </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+              </table>
+              <div class="empty" id="empty" hidden></div>
+            </div>
+          </section>
+
+          <section class="card ceo" aria-label="סוכן מנכ״ל">
+            <div class="ceo-h">
+              <b>🧭 סוכן מנכ״ל</b><small>מה צריך אותך עכשיו</small>
+            </div>
+            <div class="stage">
+              <div class="face" aria-hidden="true">👔</div>
+              <h2 id="hello">שלום</h2>
+              <p id="ceoLine"></p>
+              <div class="todo" id="todo"></div>
+            </div>
+            <form class="ask" id="askForm">
+              <label class="sr" for="askIn">שאלה לסוכן מנכ״ל</label>
+              <input
+                id="askIn"
+                placeholder="לשאול את המנכ״ל…"
+                autocomplete="off"
+              />
+              <button type="submit" aria-label="לשאול ב-Claude">↖</button>
+            </form>
+            <div class="qchips" id="qchips"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status"></div>
+<div class="veil" id="veil"></div>
+    <section
+      class="page"
+      id="page"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="pName"
+      aria-hidden="true"
+    >
+      <div class="p-h">
+        <div class="k" id="pIcon" aria-hidden="true"></div>
+        <div style="flex: 1; min-width: 0">
+          <h2 id="pName"></h2>
+          <div class="meta" id="pMeta"></div>
+        </div>
+        <button class="x" id="pClose" aria-label="סגירה">✕</button>
+      </div>
+      <div class="p-b" id="pBody"></div>
+    </section>
+
+    <script src="../data/config.js"></script>
+    <script src="../data/agents.js"></script>
+    <script src="../data/alert-health.js"></script>
+    <script>
+      (() => {
+        const D = window.CEO_DATA || null;
+        const C = window.CEO_CONFIG || {};
+        const $ = (id) => document.getElementById(id);
+        const esc = (s) =>
+          String(s ?? "").replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              })[c],
+          );
+        const claude = (p) =>
+          "vscode://anthropic.claude-code/open?prompt=" + encodeURIComponent(p);
+        const fileLink = (p) =>
+          "vscode://file" +
+          (String(p).startsWith("/") ? "" : "/") +
+          encodeURI(String(p).replace(/\\/g, "/"));
+        const STATUS = { partial: "חלקי", ok: "תקין",
+          idle: "ממתין",
+          failed: "נכשל",
+          missed: "לא רץ בזמן",
+          off: "מכובה",
+          unknown: "לא ידוע",
+          manual: "מפעילים כשצריך",
+        };
+        const EMO = { partial: "⚠️", ok: "✅",
+          idle: "💤",
+          failed: "⛔",
+          missed: "⏰",
+          off: "⏸️",
+          unknown: "❔",
+          manual: "✋",
+        };
+        const DOT = { partial: "#D2852C", ok: "#2E8A57",
+          idle: "#8AA58F",
+          failed: "#C2352A",
+          missed: "#D2852C",
+          off: "#A3A39F",
+          unknown: "#7D8BA8",
+          manual: "#C9A459",
+        };
+        const WHY_BG = { partial: "var(--late-bg)", ok: "var(--ok-bg)",
+          idle: "var(--idle-bg)",
+          failed: "var(--bad-bg)",
+          missed: "var(--late-bg)",
+          off: "var(--off-bg)",
+          unknown: "var(--unk-bg)",
+          manual: "var(--man-bg)",
+        };
+        const isBad = (a) => a.status === "failed" || a.status === "missed" || a.status === "partial";
+        const isWin = (D && D.platform) === "win32";
+
+        // לוגואים אמיתיים (קבצים בתיקייה icons). מה שאין לו לוגו נשאר עם אימוג'י.
+        const LOGOS = [
+          [/whatsapp|וואטסאפ|green.?api/i, "whatsapp"],
+          [/gmail/i, "gmail"],
+          [/google.?calendar|יומן/i, "googlecalendar"],
+          [/google.?drive|דרייב/i, "googledrive"],
+          [/google.?sheets|שיטס|^google$/i, "googlesheets"],
+          [/canva/i, "canva"],
+          [/^make$|make\.com|⚙️ make/i, "make"],
+          [/airtable/i, "airtable"],
+          [/notion/i, "notion"],
+          [/zoom/i, "zoom"],
+          [/calendly/i, "calendly"],
+          [/^meta$|מטא|facebook/i, "meta"],
+          [/instagram|אינסטגרם/i, "instagram"],
+          [/vercel/i, "vercel"],
+          [/wordpress/i, "wordpress"],
+          [/dropbox/i, "dropbox"],
+          [/miro/i, "miro"],
+          [/claude/i, "claude"],
+          [/openai|chatgpt/i, "openai"],
+          [/telegram/i, "telegram"],
+          [/slack/i, "slack"],
+          [/figma/i, "figma"],
+          [/webflow/i, "webflow"],
+          [/stripe/i, "stripe"],
+          [/github/i, "github"],
+          [/n8n/i, "n8n"],
+          [/zapier/i, "zapier"],
+          [/hubspot/i, "hubspot"],
+          [/אינטרנט/i, "googlechrome"],
+          [/קבצים ותוכנות|המחשב/i, isWin ? "windows" : "apple"],
+        ];
+        const logoFor = (name) => {
+          const m = LOGOS.find(([re]) => re.test(String(name || "")));
+          return m ? m[1] : null;
+        };
+        const img = (slug, alt = "") =>
+          `<img class="logo-i" src="icons/${slug}.svg" alt="${esc(alt)}">`;
+        const icon = (name, emo) => {
+          const s = logoFor(name);
+          return s ? img(s) : esc(emo || "⚙️");
+        };
+        const kindIcon = (a) =>
+          a.kind === "assistant"
+            ? img("whatsapp")
+            : a.kind === "make"
+              ? img("make")
+              : a.kind === "skill" || a.kind === "team" || a.kind === "plugin"
+                ? img("claude")
+                : a.kind === "scheduled"
+                  ? a.type === "combo" || a.shelf === "auto"
+                    ? img("claude")
+                    : img(isWin ? "windows" : "apple")
+                  : a.kind === "missing"
+                    ? "❓"
+                    : a.kind === "added"
+                      ? "📝"
+                      : "🤖";
+        const whereBadges = (a) => {
+          const b = [];
+          if (a.shelf === "manual")
+            b.push('<span class="wb man">✋ ידני</span>');
+          b.push(
+            a.where === "cloud"
+              ? '<span class="wb cloud">☁️ בענן</span>'
+              : `<span class="wb pc">💻 במחשב</span>`,
+          );
+          return `<span class="where">${b.join("")}</span>`;
+        };
+
+        function ago(iso) {
+          if (!iso) return "";
+          const ms = Date.now() - Date.parse(iso);
+          if (!Number.isFinite(ms)) return "";
+          const m = Math.round(ms / 60000);
+          if (m < 2) return "עכשיו";
+          if (m < 60) return `לפני ${m} דקות`;
+          const h = Math.round(m / 60);
+          if (h < 24)
+            return h === 1
+              ? "לפני שעה"
+              : h === 2
+                ? "לפני שעתיים"
+                : `לפני ${h} שעות`;
+          const d = Math.round(h / 24);
+          return d === 1 ? "אתמול" : d === 2 ? "שלשום" : `לפני ${d} ימים`;
+        }
+        const dayAgo = (ymd) => {
+          if (!ymd) return "";
+          const d = Math.round(
+            (Date.now() - Date.parse(ymd + "T12:00:00")) / 864e5,
+          );
+          return d <= 0 ? "היום" : d === 1 ? "אתמול" : `לפני ${d} ימים`;
+        };
+
+        if (!D) {
+          document.querySelector(".mainc").innerHTML +=
+            `<div class="card empty" style="padding:60px 16px"><b>עוד לא נסרק כלום</b>כדי לראות כאן את הסוכנים, כותבים ב-Claude Code: "סוכן מנכ״ל, תסרוק"<br><br><a class="btn dark" href="${claude("סוכן מנכ״ל, תסרוק")}">לפתוח את Claude ולסרוק</a></div>`;
+          return;
+        }
+
+        const all = D.agents || [];
+        const SH = {
+          auto: all.filter((a) => a.shelf === "auto"),
+          manual: all.filter((a) => a.shelf === "manual"),
+          automation: all.filter((a) => a.shelf === "automation"),
+          drawer: all.filter((a) => a.shelf === "drawer"),
+        };
+        const shown = all.filter((a) => a.shelf !== "drawer");
+        const attention = shown.filter(isBad);
+        const gone = shown.filter((a) => a.gone);
+        const unverified = shown.filter(
+          (a) => a.autonomous && a.status === "unknown",
+        );
+        const unchecked = (D.sources || [])
+          .filter((s) => !s.checked)
+          .map((s) => s.name);
+        const stale = Date.now() - Date.parse(D.scannedAt) > 6 * 3600e3;
+        const scannedAgo = ago(D.scannedAt);
+        const owner = C.ownerName || "";
+        const newOnes = shown.filter((a) => a.isNew);
+
+        if (owner) $("youName").textContent = `(${owner})`;
+        if (C.businessName) $("sideBiz").textContent = C.businessName;
+        $("hello").textContent = owner ? `שלום ${owner.split(" ")[0]}` : "שלום";
+        $("lead").textContent =
+          `מי עובד בשבילך, מה רץ לבד, ומה צריך אותך עכשיו. נסרק ${scannedAgo}.`;
+        $("ceoLine").textContent = stale
+          ? `הנתונים מ${scannedAgo}, ולא ידוע מה קרה מאז. כדאי לסרוק מחדש.`
+          : attention.length
+            ? `${attention.length === 1 ? "דבר אחד נכשל או לא רץ בזמן" : attention.length + " דברים נכשלו או לא רצו בזמן"}.`
+            : gone.length
+              ? `${gone.length} שסימנת כשלך לא נמצאו בסריקה הזו.`
+              : !shown.length
+                ? "עוד לא מצאתי סוכנים במחשב הזה."
+                : unverified.length
+                  ? `אין תקלות ידועות. על ${unverified.length} אין מספיק מידע כדי לדעת אם רצו.`
+                  : "כל מה שרץ לבד רץ בזמן. אין כרגע שום דבר שמחכה לך.";
+        $("rescan").href = claude("סוכן מנכ״ל, תסרוק מחדש ותעדכן את הדשבורד");
+        $("addMissing").href = claude(
+          "סוכן מנכ״ל, חסר לי סוכן בדשבורד. תשאל אותי איך קוראים לו ומה הוא עושה, תחפש אותו במחשב ובמייק, ואם לא תמצא תוסיף אותו לרשימה שלי.",
+        );
+        $("newAgent").href = claude(
+          "אני רוצה לבנות סוכן חדש לעסק. תשאל אותי שאלה אחת בכל פעם: מה הוא צריך לעשות, מתי ואיפה. תבנה אותו כסקיל של Claude Code בתוך תיקיית עבודה, ואם הוא צריך לרוץ לבד, גם כמשימה מתוזמנת במחשב. כשהוא מוכן ונבדק, תרשום אותו בסוכן מנכ״ל עם שם בעברית, התפקיד שלו והתוצאה שהוא צריך להביא (הפקודה register בסקיל ceo-agent).",
+        );
+
+        // ---------- כרטיסים ----------
+        const kpi = (f, label, val, sub, emo) =>
+          `<div class="card kpi" data-f="${f}" role="button" tabindex="0"><div class="row"><span class="lbl">${label}</span><span class="ic" aria-hidden="true">${emo}</span></div><div class="val">${val}</div><div class="sub">${sub}</div></div>`;
+        $("kpis").innerHTML =
+          kpi(
+            "auto",
+            "סוכנים אוטונומיים",
+            SH.auto.length,
+            "<span>רצים לבד בשעות קבועות</span>",
+            "🤖",
+          ) +
+          kpi(
+            "manual",
+            "סוכנים ידניים",
+            SH.manual.length,
+            "<span>מפעילים אותם כשצריך</span>",
+            "✋",
+          ) +
+          kpi(
+            "automation",
+            "אוטומציות",
+            SH.automation.length,
+            "<span>תרחישים בענן (Make)</span>",
+            "⚙️",
+          ) +
+          kpi(
+            "attention",
+            "נכשלו",
+            attention.length,
+            attention.length
+              ? '<span class="warn">נכשלו או לא רצו בזמן</span>'
+              : stale
+                ? '<span class="warn">הנתונים ישנים</span>'
+                : '<span class="good">אין תקלות ידועות</span>',
+            attention.length ? "⛔" : "🛡️",
+          );
+        if (stale) {
+          const b = document.createElement("div");
+          b.className = "banner";
+          b.innerHTML = `⚠️ הנתונים כאן מ${esc(scannedAgo)}. מה שקרה מאז לא מופיע. <a href="${$("rescan").href}">לסרוק מחדש</a>`;
+          $("kpis").before(b);
+        }
+        {
+          const make = (D.sources || []).find((s) => s.name === "תרחישי Make");
+          const checked = (D.sources || [])
+            .filter((s) => s.checked)
+            .map((s) =>
+              s.name === "תרחישי Make"
+                ? s.fromApi
+                  ? "Make"
+                  : `Make (${ago(s.checkedAt)})`
+                : s.name === "משימות מתוזמנות במחשב"
+                  ? "המחשב הזה"
+                  : s.name === "סוכני Claude Code"
+                    ? "Claude Code"
+                    : s.name,
+            );
+          const t = D.totals || {};
+          $("cover").innerHTML =
+            `נבדק: <b>${checked.join(" · ")}</b>${unchecked.length ? ` · <span style="color:var(--late)">לא נבדק: ${esc(unchecked.join(", "))}</span>` : ""} · לא נבדק: מחשבים אחרים והטלפון<br>
+    נמצאו <b>${t.found ?? all.length}</b> · מוצגים <b>${shown.length}</b> · <a href="#" data-f="drawer">${SH.drawer.length} לא בשימוש</a>${make && make.offCount ? ` · ${make.offCount} תרחישים כבויים ב-Make` : ""}${newOnes.length ? ` · <b style="color:var(--gold)">${newOnes.length} חדשים, לאשר</b>` : ""}`;
+        }
+
+        // ---------- העץ ----------
+        // סדר (בקשת טל): למעלה מה שעובד ומה שמשתמשים בו, ובסוף מה שנכשל או לא ידוע.
+        // התקלות לא נעלמות: הן בכרטיס "נכשלו", בסינון "נכשלו" ואצל סוכן מנכ״ל.
+        const order = { ok: 0, manual: 1, idle: 2, unknown: 3, partial: 4, missed: 5, failed: 6, off: 7 };
+        const sorted = (list) =>
+          [...list].sort(
+            (a, b) =>
+              (a.gone ? 1 : 0) - (b.gone ? 1 : 0) ||
+              order[a.status] - order[b.status] ||
+              ((b.usage && b.usage.days) || 0) - ((a.usage && a.usage.days) || 0) ||
+              (Date.parse(b.lastRun || 0) || 0) - (Date.parse(a.lastRun || 0) || 0) ||
+              a.name.localeCompare(b.name, "he"),
+          );
+        let q = "";
+        const matches = (a) =>
+          !q ||
+          [
+            a.name,
+            a.description,
+            a.role,
+            a.goal,
+            a.folder,
+            ...(a.skills || []).map((s) => s.name),
+            ...(a.services || []).map((s) => s.name),
+          ]
+            .join(" ")
+            .toLowerCase()
+            .includes(q.toLowerCase());
+        const whenLine = (a) =>
+          a.shelf === "manual"
+            ? `✋ ידני · ${a.usage && a.usage.days ? `הופעל ${esc(dayAgo(a.usage.last))}` : "מפעילים כשצריך"}`
+            : `${a.where === "cloud" ? "☁️ בענן" : "💻 במחשב"} · ${esc(a.schedule || "")}`;
+        const role = (a) =>
+          `<button class="role" data-id="${esc(a.id)}" title="${esc(a.description || a.statusWhy)}"><span class="d" style="background:${a.gone ? DOT.missed : DOT[a.status]}"></span>${kindIcon(a)}<span class="tx"><span class="t">${esc(a.name)}${a.isNew ? ' <span class="new">חדש</span>' : ""}</span><span class="w">${whenLine(a)}</span></span></button>`;
+        function renderTree() {
+          const col = (key, emo, label, tip, list) => {
+            const l = sorted(list.filter(matches));
+            const vis = l;
+            return `<div class="dept"><div class="drop"></div><button class="dpill" data-f="${key}"><span aria-hidden="true">${emo}</span>${label}<span class="n">${l.length}</span></button><div class="dtip">${tip}</div><div class="roles">${vis.map(role).join("") || '<span class="note" style="text-align:center">אין עדיין</span>'}${l.length > vis.length ? `<button class="role more" data-f="${key}">עוד ${l.length - vis.length}…</button>` : ""}</div></div>`;
+          };
+          $("depts").innerHTML =
+            col(
+              "auto",
+              "🤖",
+              "סוכנים אוטונומיים",
+              "רצים לבד במחשב, בשעות קבועות",
+              SH.auto,
+            ) +
+            col(
+              "manual",
+              "✋",
+              "סוכנים ידניים",
+              "מפעילים אותם כשצריך",
+              SH.manual,
+            ) +
+            col(
+              "automation",
+              "⚙️",
+              "אוטומציות",
+              "תרחישים שרצים בענן (Make)",
+              SH.automation,
+            );
+        }
+
+        // ---------- מנכ״ל ----------
+        // סוכנים שעוד לא כתוב אצלם מה התפקיד ומה התוצאה שהם צריכים להביא
+        const undefinedN = D.agents.filter((a) => a.needsDefinition).length;
+        const defineAll = undefinedN
+          ? `<a href="${esc(claude(`סוכן מנכ״ל: ל-${undefinedN} סוכנים עוד לא הוגדרו התפקיד והתוצאה. תעבור על הקבצים שלהם, תציע לי לכל אחד שם בעברית, תפקיד ותוצאה בטבלה אחת, ותשמור אחרי שאאשר.`))}"><span aria-hidden="true">🎯</span><span><b style="font-weight:600">${undefinedN} סוכנים בלי תפקיד ותוצאה</b><br><span style="color:var(--mut)">להגדיר עם Claude, בטבלה אחת</span></span></a>`
+          : "";
+        $("todo").innerHTML = defineAll +
+          attention
+            .slice(0, 3)
+            .map(
+              (a) =>
+                `<button data-id="${esc(a.id)}"><span aria-hidden="true">${EMO[a.status]}</span><span><b style="font-weight:600">${esc(a.name)}</b><br><span style="color:var(--mut)">${esc(a.statusWhy)}</span></span></button>`,
+            )
+            .join("") +
+          (attention.length > 3
+            ? `<button data-f="attention"><span aria-hidden="true">➕</span><span>עוד ${attention.length - 3}</span></button>`
+            : "");
+        const ctx = () => `(הנתונים של סוכן מנכ״ל נסרקו ${scannedAgo}.)`;
+        $("qchips").innerHTML = [
+          "מה נכשל אצלי?",
+          "מה הכי חשוב לבדוק עכשיו?",
+          "תסכם לי במשפט אחד",
+        ]
+          .map((c) => `<button type="button">${esc(c)}</button>`)
+          .join("");
+        $("qchips").addEventListener("click", (e) => {
+          const b = e.target.closest("button");
+          if (b)
+            launch(ROOT, claude(`סוכן מנכ״ל: ${b.textContent} ${ctx()}`), "של סוכן מנכ״ל");
+        });
+        $("askForm").addEventListener("submit", (e) => {
+          e.preventDefault();
+          const v = $("askIn").value.trim();
+          if (v) launch(ROOT, claude(`סוכן מנכ״ל: ${v} ${ctx()}`), "של סוכן מנכ״ל");
+        });
+        {
+          const wa = C.alerts || null;
+          const ah = window.CEO_ALERT_HEALTH || C.alertHealth || null;
+          const ahFresh =
+            ah &&
+            ah.lastRunAt &&
+            Date.now() - Date.parse(ah.lastRunAt) < 45 * 60 * 1000;
+          $("sideAlert").innerHTML =
+            wa && wa.enabled && ah && ah.lastError
+              ? `<b>⚠️ יש בעיה בהתראות</b><p>${esc(ah.lastError)}</p><a class="mini" style="align-self:flex-start" href="${claude("סוכן מנכ״ל, ההתראות לא עובדות. תבדוק מה קרה")}">לבדוק</a>`
+              : wa && wa.enabled && !ahFresh
+                ? `<b>❔ התראות: לא ידוע אם עובדות</b><p>${ah && ah.lastRunAt ? `הבדיקה הקבועה רצה ${esc(ago(ah.lastRunAt))}.` : "הבדיקה הקבועה עוד לא רצה."}</p>`
+                : wa && wa.enabled
+                  ? `<b>${img("whatsapp")} התראות בוואטסאפ פעילות</b><p>${wa.daily ? `סיכום יומי ב-${esc(wa.dailyAt || "20:00")}, ותקלה מיד כשהיא קורית.` : "רק כשמשהו נתקע או לא רץ בזמן."}</p>`
+                  : `<b>${img("whatsapp")} התראות בוואטסאפ כבויות</b><p>כדי לקבל הודעה כשמשהו נתקע.</p><a class="mini" style="align-self:flex-start" href="${claude("סוכן מנכ״ל, תפעיל התראות בוואטסאפ")}">להפעלה</a>`;
+        }
+
+        // ---------- רשימה ----------
+        const FILTERS = [
+          ["all", "🗂️", "כל הסוכנים", "הכול", (a) => a.shelf !== "drawer"],
+          [
+            "auto",
+            "🤖",
+            "אוטונומיים",
+            "סוכנים אוטונומיים",
+            (a) => a.shelf === "auto",
+            true,
+          ],
+          [
+            "manual",
+            "✋",
+            "ידניים",
+            "סוכנים ידניים",
+            (a) => a.shelf === "manual",
+            true,
+          ],
+          [
+            "automation",
+            "⚙️",
+            "אוטומציות",
+            "אוטומציות",
+            (a) => a.shelf === "automation",
+          ],
+          [
+            "pc",
+            "💻",
+            "במחשב",
+            "מה שרץ במחשב",
+            (a) => a.shelf !== "drawer" && a.where !== "cloud",
+          ],
+          [
+            "cloud",
+            "☁️",
+            "בענן",
+            "מה שרץ בענן",
+            (a) => a.shelf !== "drawer" && a.where === "cloud",
+          ],
+          [
+            "attention",
+            "⛔",
+            "נכשלו",
+            "נכשלו או לא רצו בזמן",
+            (a) => a.shelf !== "drawer" && isBad(a),
+          ],
+          [
+            "drawer",
+            "🗄️",
+            "לא בשימוש",
+            "לא בשימוש",
+            (a) => a.shelf === "drawer",
+          ],
+        ];
+        let filter = "all";
+        const F = (k) => FILTERS.find((f) => f[0] === k);
+        function renderSide() {
+          $("snav").innerHTML =
+            `<button data-go="tree"><span class="e" aria-hidden="true">🗺️</span><span>העץ</span></button>` +
+            FILTERS.map(([k, e, l, , fn, sub]) => {
+              const n = all.filter(fn).length;
+              return `${k === "pc" ? '<div class="s-t">איפה זה רץ</div>' : k === "attention" ? '<div class="s-t">מצב</div>' : ""}<button data-f="${k}" aria-pressed="${filter === k}" class="${sub ? "sub" : ""}"><span class="e" aria-hidden="true">${e}</span><span>${l}</span><span class="cnt ${k === "attention" && n ? "hot" : ""}">${n}</span></button>`;
+            }).join("");
+          $("listTitle").textContent = `${F(filter)[1]} ${F(filter)[3]}`;
+          $("thStatus").textContent =
+            filter === "drawer" ? "למה לא בשימוש" : "מצב";
+        }
+        function statusCell(a) {
+          if (a.shelf === "drawer")
+            return `<span class="when2" style="color:var(--ink)">${esc(a.drawerReason || "")}</span>`;
+          if (a.gone)
+            return `<span class="pill s-gone">⚠️ נעלם</span><span class="when">מאז הבדיקה הקודמת</span>`;
+          if (a.status === "manual")
+            return `<span class="pill s-manual">✋ ידני</span>${a.usage && a.usage.days ? `<span class="when">הופעל ב-${a.usage.days} ימים · אחרון ${esc(dayAgo(a.usage.last))}</span>` : ""}`;
+          return `<span class="pill s-${a.status}">${EMO[a.status]} ${STATUS[a.status]}</span>${a.lastRun ? `<span class="when">${esc(ago(a.lastRun))}</span>` : ""}`;
+        }
+        function renderRows() {
+          const fn = F(filter)[4];
+          const list = sorted(all.filter(fn).filter(matches));
+          $("rows").innerHTML = list
+            .map(
+              (a) => `<tr data-id="${esc(a.id)}" tabindex="0">
+    <td><div class="ag"><span class="k" aria-hidden="true">${kindIcon(a)}</span><span><b title="${esc(a.name)}">${esc(a.name)}${a.isNew ? '<span class="newb">חדש</span>' : ""}</b><small>${a.shelf === "auto" ? "🤖 סוכן אוטונומי" : a.shelf === "manual" ? "✋ סוכן ידני" : a.shelf === "automation" ? "⚙️ אוטומציה" : esc(a.kindLabel || "")}</small></span></div></td>
+    <td>${a.description ? `<span class="desc">${esc(a.description)}</span>` : '<span class="desc none">לא ברור מה הוא עושה · להגדיר</span>'}</td>
+    <td>${whereBadges(a)}${a.shelf !== "manual" ? `<span class="when2">${esc(a.schedule || "")}</span>` : ""}</td>
+    <td>${statusCell(a)}</td></tr>`,
+            )
+            .join("");
+          const empty = $("empty");
+          empty.hidden = !!list.length;
+          if (!list.length)
+            empty.innerHTML =
+              filter === "attention" && !q
+                ? "<b>🛡️ אין תקלות ידועות</b>אין כרגע משהו שנכשל או שלא רץ בזמן."
+                : q
+                  ? "<b>לא נמצא</b>אפשר לנסות מילה אחרת."
+                  : `<b>אין כאן כלום</b><a class="btn dark" href="${$("newAgent").href}" style="margin-top:10px">✨ לבנות סוכן חדש</a>`;
+        }
+        function setFilter(f, scroll = true) {
+          filter = f;
+          renderSide();
+          renderRows();
+          if (scroll)
+            document
+              .querySelector(".list")
+              .scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        // שתי תיבות חיפוש (בראש הדף ומעל הרשימה) שמראות תמיד את אותו חיפוש
+        for (const id of ["q", "q2"]) {
+          $(id).addEventListener("input", (e) => {
+            q = e.target.value.trim();
+            const other = $(id === "q" ? "q2" : "q");
+            if (other.value !== e.target.value) other.value = e.target.value;
+            renderTree();
+            renderRows();
+          });
+        }
+
+        // ---------- דף סוכן ----------
+        let lastFocus = null;
+        function flowHTML(f) {
+          const node = (n) =>
+            `<div class="fn k-${esc(n.kind)}" ${n.kind === "main" ? 'data-main="1"' : ""}><div class="box" aria-hidden="true">${icon(n.label, n.emo || (n.kind === "skill" ? "✨" : n.kind === "service" ? "🔌" : "⚙️"))}</div><div class="t">${esc(n.label)}</div>${n.sub ? `<div class="s">${esc(n.sub)}</div>` : ""}</div>`;
+          return `<div class="flow" id="flow"><svg id="fwires" aria-hidden="true"></svg><div class="f-chain">${(f.chain || []).map(node).join("")}</div>${(f.branches || []).map((b) => `<div class="f-branch"><h4>${esc(b.title)}</h4><div class="f-row">${b.nodes.map(node).join("")}</div></div>`).join("")}</div>`;
+        }
+        function drawFlow() {
+          const flow = $("flow");
+          if (!flow) return;
+          const svg = $("fwires"),
+            R = flow.getBoundingClientRect();
+          svg.setAttribute("width", flow.scrollWidth);
+          svg.setAttribute("height", flow.scrollHeight);
+          const box = (el) => {
+            const r = el.querySelector(".box").getBoundingClientRect();
+            return {
+              l: r.left - R.left + flow.scrollLeft,
+              r: r.right - R.left + flow.scrollLeft,
+              t: r.top - R.top,
+              b: r.bottom - R.top,
+              cx: r.left + r.width / 2 - R.left + flow.scrollLeft,
+              cy: r.top + r.height / 2 - R.top,
+            };
+          };
+          const paths = [];
+          const chain = [...flow.querySelectorAll(".f-chain > .fn")];
+          for (let i = 0; i + 1 < chain.length; i++) {
+            const a = box(chain[i]),
+              b = box(chain[i + 1]);
+            if (Math.abs(a.cy - b.cy) < 12)
+              paths.push(`M${a.l},${a.cy} L${b.r},${b.cy}`);
+            else {
+              const midY = a.b + (b.t - a.b) / 2;
+              paths.push(
+                `M${a.cx},${a.b} L${a.cx},${midY} L${b.cx},${midY} L${b.cx},${b.t}`,
+              );
+            }
+          }
+          const hub =
+            flow.querySelector(".f-chain > .fn[data-main]") ||
+            chain[chain.length - 1];
+          const firstRow = flow.querySelector(".f-branch");
+          if (hub && firstRow) {
+            const h = box(hub);
+            const allN = [...firstRow.querySelectorAll(".fn")].map(box);
+            const nodes = allN.filter((n) => Math.abs(n.t - allN[0].t) < 8);
+            if (nodes.length) {
+              const busY = nodes[0].t - 12;
+              const xs = nodes.map((n) => n.cx).concat(h.cx);
+              paths.push(
+                `M${h.cx},${h.b} L${h.cx},${busY}`,
+                `M${Math.min(...xs)},${busY} L${Math.max(...xs)},${busY}`,
+              );
+              for (const n of nodes)
+                paths.push(`M${n.cx},${busY} L${n.cx},${n.t}`);
+            }
+          }
+          svg.innerHTML = paths
+            .map(
+              (d) =>
+                `<path d="${d}" fill="none" stroke="#c9a459" stroke-opacity=".7" stroke-width="1.6"/>`,
+            )
+            .join("");
+        }
+        // באיזו תיקייה עובדים על סוכן: התיקייה של הפרויקט שלו. סקיל כללי או תרחיש Make: בתיקייה של סוכן מנכ״ל.
+function workFolder(a) {
+  if (a.kind === "make" || a.kind === "plugin" || a.kind === "added" || a.kind === "missing") return "";
+  const f = a.kind === "skill" || a.kind === "team" ? a.projectDir : a.folder || a.projectDir;
+  if (!f || /[\\/]\.claude[\\/]/.test(f)) return "";
+  return f;
+}
+function defBlock(a) {
+  const role = a.role || a.description;
+  const defineLink = `<a href="${esc(claude(`סוכן מנכ״ל: תעזור לי להגדיר במשפט אחד מה "${a.name}" עושה ומה התוצר שלו, ותשמור את זה ברשימה שלי. המזהה שלו: ${a.id}. הקבצים שלו: ${(a.files || []).join(" , ")}`))}">להגדיר עם Claude</a>`;
+  const goalLink = `<a href="${esc(claude(`סוכן מנכ״ל: תעזור לי להגדיר במשפט אחד מה התוצאה ש-"${a.name}" צריך להביא לי (מה אני אמור לקבל ממנו, ואיפה). קודם תקרא את הקבצים שלו ותציע, ואחרי שאאשר תשמור עם node scan/roster.mjs goal "${a.id}" "<המשפט>". הקבצים שלו: ${(a.files || []).join(" , ")}`))}">להגדיר עם Claude</a>`;
+  const outs = (a.outputs || []).map((o) =>
+    o.type === "drive" ? `<a class="chipx" href="${esc(o.url)}" target="_blank" rel="noopener">${img("googledrive")} ${esc(o.label)}</a>` :
+    o.type === "drive-local" ? `<span class="chipx">${img("googledrive")} ${esc(o.label)}</span>` :
+    o.type === "folder" ? `<a class="chipx" href="${esc(fileLink(o.path))}" title="${esc(o.path)}">📁 ${esc(o.label)}</a>` :
+    o.type === "mail" ? `<span class="chipx">${img("gmail")} ${esc(o.label)}</span>` :
+    o.type === "whatsapp" ? `<span class="chipx">${img("whatsapp")} ${esc(o.label)}</span>` : ""
+  ).join("");
+  const links = a.url ? `<a class="chipx" href="${esc(a.url)}" target="_blank" rel="noopener">${img("make")} התרחיש ב-Make</a>` : "";
+  const svcs = (a.services || []).map((x) => `<span class="chipx">${icon(x.name, x.emo)} ${esc(x.name)}</span>`).join("");
+  return `<div class="def">
+    <div class="def-row"><span class="dl">🎯 התפקיד שלו</span><div>${role ? `<p class="does">${esc(role)}</p>` : `<p class="does none">לא ברור מה הוא עושה. ${defineLink}</p>`}${a.partOf ? `<div class="note">חלק מ: ${esc(a.partOf)}</div>` : ""}</div></div>
+    <div class="def-row"><span class="dl">🏁 התוצאה שהוא צריך להביא</span><div>${a.goal ? `<p class="does">${esc(a.goal)}</p>` : `<p class="does none">עוד לא הוגדר. ${goalLink}</p>`}</div></div>
+    <div class="def-row"><span class="dl">📦 איפה התוצאה</span><div class="chipsx">${outs || links || `<span class="note">לא מצאתי בקבצים שלו לאן הוא שם את התוצרים. ${defineLink}</span>`}${outs && links ? links : ""}</div></div>
+    <div class="def-row"><span class="dl">🔌 מחובר ל</span><div class="chipsx">${svcs || '<span class="note">לא מצאתי בקבצים שלו חיבור למערכת חיצונית.</span>'}</div></div>
+  </div>`;
+}
+function openPage(a) {
+          lastFocus = document.activeElement;
+          $("pIcon").innerHTML = kindIcon(a);
+          $("pName").textContent = a.name;
+          $("pMeta").innerHTML =
+            `<span class="badge">${a.shelf === "auto" ? "🤖 סוכן אוטונומי" : a.shelf === "manual" ? "✋ סוכן ידני" : a.shelf === "automation" ? "⚙️ אוטומציה" : "🗄️ לא בשימוש"}</span>${whereBadges(a)}${a.isNew ? '<span class="badge ai">חדש</span>' : ""}${a.shelf === "drawer" ? `<span class="badge">${esc(a.drawerReason || "")}</span>` : a.gone ? '<span class="pill s-gone">⚠️ נעלם</span>' : a.status === "manual" ? "" : `<span class="pill s-${a.status}">${EMO[a.status]} ${STATUS[a.status]}</span>`}`;
+          const facts = [
+            [
+              "📁 איפה הוא יושב",
+              a.folder
+                ? String(a.folder).startsWith("Make")
+                  ? esc(a.folder)
+                  : `<a href="${esc(fileLink(a.folder))}" title="לפתוח את התיקייה ב-VS Code" dir="ltr">${esc(a.folder)}</a>`
+                : "—",
+            ],
+            [
+              "⏰ מתי הוא רץ",
+              a.shelf === "manual" ? "כשמפעילים אותו" : esc(a.schedule || "—"),
+            ],
+            [
+              a.where === "cloud" ? "☁️ איפה רץ" : "💻 איפה רץ",
+              a.where === "cloud" ? "ב-Make (בענן)" : "במחשב הזה",
+            ],
+            a.usage
+              ? [
+                  "📊 כמה משתמשים בו",
+                  a.usage.days
+                    ? `הופעל ב-${a.usage.days} ימים שונים ב-${a.usage.window} הימים האחרונים · אחרון ${esc(dayAgo(a.usage.last))}`
+                    : `לא הופעל ב-${a.usage.window} הימים האחרונים`,
+                ]
+              : [
+                  "🕐 ריצה אחרונה",
+                  a.lastRun
+                    ? esc(
+                        `${ago(a.lastRun)} (${new Date(a.lastRun).toLocaleString("he-IL", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" })})`,
+                      )
+                    : "לא ידוע",
+                ],
+          ];
+          const links =
+            (a.links || []).length || a.url
+              ? `<div class="sec"><h3>🔗 קשור אליו</h3><div class="links">${a.url ? `<a href="${esc(a.url)}" target="_blank" rel="noopener">${img("make")} התרחיש ב-Make</a>` : ""}${(a.links || []).map((l) => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} · ${esc(l.host)}</a>`).join("")}</div></div>`
+              : "";
+          const files = (a.files || []).length
+            ? `<div class="sec"><h3>🧩 ממה הוא בנוי</h3><div class="files">${a.files.map((f) => `<a href="${esc(fileLink(f))}">${esc(f)}</a>`).join("")}</div></div>`
+            : "";
+          const hasFlow =
+            a.flow &&
+            ((a.flow.chain || []).length || (a.flow.branches || []).length);
+          const hidden = a.shelf === "drawer" && a.drawerReason === "סומן: לא שלי";
+          const ask = (t) => esc(claude(`סוכן מנכ״ל: ${t} המזהה שלו: ${a.id}`));
+          const mineBtns =
+            a.kind === "missing" || a.kind === "added"
+              ? `<a class="btn" href="${ask(`תוריד את "${a.name}" מהרשימה שלי.`)}">🗑️ להוריד מהרשימה</a>`
+              : `
+      ${a.mine ? "" : hidden ? `<a class="btn" href="${ask(`תחזיר את "${a.name}" לדשבורד, הוא שלי.`)}">↩️ להחזיר לדשבורד</a>` : `<a class="btn" href="${ask(`תסמן את "${a.name}" כשלי.`)}">✓ זה שלי</a>`}
+      ${hidden ? "" : `<a class="btn" href="${ask(`תוציא את "${a.name}" מהדשבורד. הוא ממשיך לעבוד, רק לא מוצג.`)}">🙈 להוציא מהדשבורד</a>`}
+      <a class="btn" href="${ask(`אני רוצה לשנות את השם של "${a.name}", את התפקיד שלו או את התוצאה שהוא צריך להביא. תשאל אותי.`)}">✏️ לשנות שם ותפקיד</a>`;
+          $("pBody").innerHTML = `
+    ${defBlock(a)}
+    ${a.status !== "manual" && a.shelf !== "drawer" ? `<div class="why" style="background:${a.gone ? "var(--late-bg)" : WHY_BG[a.status]}">${a.gone ? "⚠️" : EMO[a.status]} ${esc(a.statusWhy)}${a.evidence ? ` <span class="note">(${esc(a.evidence)})</span>` : ""}</div>` : ""}
+    <div class="facts">${facts.map(([k, v]) => `<div class="fact"><span>${k}</span><b>${v}</b></div>`).join("")}</div>
+    ${hasFlow ? `<div class="sec"><h3>🗺️ איך הוא בנוי</h3>${flowHTML(a.flow)}<div class="note" style="margin-top:6px">${a.kind === "assistant" ? "החיבורים נלקחו מרשימת המערכות שמחוברות ל-Claude Code במחשב הזה." : `נבנה ממה שכתוב בקבצים שלו${a.kind === "make" ? " ומהשלבים ב-Make" : ""}.`}</div></div>` : ""}
+    ${links}${files}
+    <div class="p-acts">
+      ${a.openSession ? `<a class="btn dark" href="${esc(a.openSession)}" data-folder="${esc(a.sessionDir || "")}" data-what="${esc(a.name)}">${img("claude")} לחזור לשיחה שבה הוא נבנה</a>` : ""}
+      ${a.openNew ? `<a class="btn ${a.openSession ? "" : "dark"}" href="${esc(a.openNew)}" data-folder="${esc(workFolder(a))}" data-what="${esc(a.name)}">${img("claude")} ${isBad(a) ? "לפתוח ב-Claude ולבדוק מה קרה" : "לפתוח ב-Claude ולעבוד עליו"}</a>` : ""}
+      ${mineBtns}
+    </div>`;
+          $("veil").classList.add("on");
+          $("page").classList.add("on");
+          $("page").setAttribute("aria-hidden", "false");
+          $("app").inert = true;
+          $("pClose").focus();
+          requestAnimationFrame(drawFlow);
+        }
+        function closePage() {
+          if (!$("page").classList.contains("on")) return;
+          $("veil").classList.remove("on");
+          $("page").classList.remove("on");
+          $("page").setAttribute("aria-hidden", "true");
+          $("app").inert = false;
+          if (lastFocus && lastFocus.focus) lastFocus.focus();
+        }
+        $("veil").addEventListener("click", closePage);
+        $("pClose").addEventListener("click", closePage);
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closePage();
+          if (e.key === "Enter" && e.target.matches(".kpi[data-f]"))
+            setFilter(e.target.dataset.f);
+          if (e.key === "Tab" && $("page").classList.contains("on")) {
+            const f = [...$("page").querySelectorAll("a[href],button")];
+            if (!f.length) return;
+            if (e.shiftKey && document.activeElement === f[0]) {
+              e.preventDefault();
+              f[f.length - 1].focus();
+            } else if (
+              !e.shiftKey &&
+              document.activeElement === f[f.length - 1]
+            ) {
+              e.preventDefault();
+              f[0].focus();
+            }
+          }
+        });
+        // כל קישור ל-Claude נפתח בתיקייה הנכונה: קודם פותחים את התיקייה ב-VS Code, ואז שולחים לשם את הבקשה.
+// שאלות וניהול: בתיקייה של סוכן מנכ״ל. שיחה של סוכן מסוים: בתיקייה שבה השיחה התנהלה.
+const ROOT = D.root || "";
+let toastT = null;
+function launch(folder, uri, what) {
+  const t = $("toast");
+  t.innerHTML = `<span>נפתח ב-VS Code, בתיקייה ${esc(what)}…</span><a href="${esc(uri)}" data-direct="1">לא נפתח? ללחוץ כאן</a>`;
+  t.classList.add("on");
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove("on"), 9000);
+  if (folder) {
+    location.href = fileLink(folder);
+    setTimeout(() => { location.href = uri; }, 1600);
+  } else location.href = uri;
+}
+document.addEventListener("click", (e) => {
+  const l = e.target.closest('a[href^="vscode://anthropic.claude-code/"]');
+  if (!l || l.dataset.direct) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const folder = l.dataset.folder || ROOT;
+  launch(folder, l.href, l.dataset.folder ? `של "${l.dataset.what || "הסוכן"}"` : "של סוכן מנכ״ל");
+}, true);
+$("askForm").addEventListener("submit", () => {}, true);
+document.addEventListener("click", (e) => {
+          const g = e.target.closest("[data-go]");
+          if (g)
+            return document
+              .getElementById("tree")
+              .scrollIntoView({ behavior: "smooth", block: "start" });
+          const f = e.target.closest("[data-f]");
+          if (f) {
+            e.preventDefault();
+            return setFilter(f.dataset.f);
+          }
+          if (e.target.closest("a")) return;
+          const el = e.target.closest("[data-id]");
+          if (el) {
+            const a = all.find((x) => x.id === el.dataset.id);
+            if (a) openPage(a);
+          }
+        });
+        $("rows").addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && e.target.matches("tr[data-id]")) {
+            const a = all.find((x) => x.id === e.target.dataset.id);
+            if (a) openPage(a);
+          }
+        });
+        window.addEventListener("resize", drawFlow);
+
+        // רענון לבד כל דקה. לא כשדף סוכן פתוח או כשמקלידים.
+        setInterval(() => {
+          const busy =
+            $("page").classList.contains("on") ||
+            ["INPUT", "TEXTAREA"].includes(
+              (document.activeElement || {}).tagName,
+            );
+          if (!busy && document.visibilityState === "visible")
+            location.reload();
+        }, 60000);
+
+        renderTree();
+        setFilter("all", false);
+        if (location.hash.startsWith("#open=")) {
+          const id = decodeURIComponent(location.hash.slice(6));
+          const a = all.find((x) => x.id === id || x.name === id);
+          if (a) setTimeout(() => openPage(a), 50);
+        }
+      })();
+    </script>
+  </body>
+</html>
