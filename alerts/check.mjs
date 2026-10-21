@@ -139,15 +139,17 @@ if (!alerts.enabled) {
 }
 
 // ---------- מה השתנה ----------
-// מפתח יציב לתקלה: הסטטוס + הסיבה בלי מספרים ושעות. כך אותה תקלה לא נשלחת שוב בכל בדיקה
-// רק כי השעה או מספר הריצות בטקסט השתנו.
-const keyOf = (a) =>
-  `${a.status}:${String(a.statusWhy || "")
-    .replace(/(היום|אתמול|שלשום|ביום \S+)/g, "")
-    .replace(/[\d:.,]+/g, "#")}`;
+// מפתח לתקלה: רק הסטטוס. שינוי בניסוח הסיבה (למשל "לא מחובר" / "מנסה להתחבר כבר X דקות") הוא לא חדשות.
+const keyOf = (a) => String(a.status);
+// על אותו סוכן לא שולחים יותר מהודעה אחת ביממה, גם אם הוא מהבהב בין תקין לתקול.
+const QUIET = 24 * 60 * 60 * 1000;
 const statePath = path.join(DATA, "alert-state.json");
 let state = readJSON(statePath, { open: {}, lastDaily: null });
 if (!state || typeof state.open !== "object" || !state.open) state = { open: {}, lastDaily: (state && state.lastDaily) || null };
+if (!state.lastSent || typeof state.lastSent !== "object") state.lastSent = {};
+const quiet = (id) => state.lastSent[id] && now - Date.parse(state.lastSent[id]) < QUIET;
+// instant: false = בלי הודעות מיידיות, רק הסיכום היומי
+const INSTANT = alerts.instant !== false;
 // מה שהמשתמש הוציא מהדשבורד לא שולח התראות
 const shown = (a) => a.autonomous && a.shelf !== "drawer" && a.status !== "off";
 const bad = (a) => shown(a) && (a.status === "failed" || a.status === "missed" || a.status === "partial");
@@ -156,7 +158,7 @@ const current = Object.fromEntries(data.agents.filter(bad).map((a) => [a.id, a])
 
 const fresh = Object.values(current).filter((a) => {
   const prev = state.open[a.id];
-  return !prev || prev.key !== keyOf(a);
+  return (!prev || prev.key !== keyOf(a)) && !quiet(a.id);
 });
 // נפתר = עכשיו תקין, או כבוי/נמחק. "לא ידוע" זה לא נפתר: התקלה נשארת פתוחה ולא נשלחת שוב.
 const recovered = Object.keys(state.open)
@@ -173,7 +175,7 @@ if (fresh.length) {
   if (fresh.length > 8) lines.push(`• ועוד ${fresh.length - 8}`);
 }
 // מה שהוצא מהדשבורד נסגר בשקט, בלי הודעת "חזר לעבוד"
-const backToWork = recovered.filter((f) => f.now && f.now.status === "ok" && f.now.shelf !== "drawer");
+const backToWork = recovered.filter((f) => f.now && f.now.status === "ok" && f.now.shelf !== "drawer" && !quiet(f.id));
 if (backToWork.length) {
   if (lines.length) lines.push("");
   lines.push(backToWork.length === 1 ? "✅ חזר לעבוד:" : "✅ חזרו לעבוד:");
@@ -182,7 +184,9 @@ if (backToWork.length) {
 
 let sentOk = true;
 let lastError = null;
-if (lines.length) {
+if (lines.length && !INSTANT) {
+  console.log(`[${stamp()}] ${fresh.length} חדשות, ${backToWork.length} חזרו לעבוד. ההודעות המיידיות כבויות, זה ייכנס לסיכום היומי.`);
+} else if (lines.length) {
   lines.push("", "הפרטים בדשבורד של סוכן מנכ״ל.");
   sentOk = send(lines.join("\n"));
   if (!sentOk) lastError = "השליחה לוואטסאפ נכשלה";
@@ -203,6 +207,7 @@ if (sentOk) {
     open[a.id] = { name: a.name, key: keyOf(a), since: (prev && prev.since) || now.toISOString() };
   }
   state.open = open;
+  if (INSTANT && lines.length) for (const a of [...fresh, ...backToWork]) state.lastSent[a.id] = now.toISOString();
 }
 
 // ---------- סיכום יומי ----------

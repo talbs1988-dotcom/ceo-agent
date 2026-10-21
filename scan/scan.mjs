@@ -2110,6 +2110,7 @@ async function main() {
         ? {
             enabled: !!cfg.alerts.enabled,
             daily: !!cfg.alerts.daily,
+            instant: cfg.alerts.instant !== false,
             dailyAt: cfg.alerts.dailyAt || null,
             why: cfg.alerts.why || null,
           }
